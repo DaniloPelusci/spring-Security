@@ -61,9 +61,12 @@ CREATE TABLE ocupacao (
 
 -- ASSOCIAÇÃO USUÁRIO-OCUPAÇÃO
 CREATE TABLE usuario_ocupacao (
-    usuario_id VARCHAR(100),
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id VARCHAR(255),
     ocupacao_id BIGINT,
-    PRIMARY KEY (usuario_id, ocupacao_id),
-    FOREIGN KEY (usuario_id) REFERENCES usuario(id),
-    FOREIGN KEY (ocupacao_id) REFERENCES ocupacao(id)
+    -- outros campos aqui...
+    CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+    CONSTRAINT fk_ocupacao FOREIGN KEY (ocupacao_id) REFERENCES ocupacao(id),
+    CONSTRAINT unique_usuario_ocupacao UNIQUE (usuario_id, ocupacao_id)
 );
+
