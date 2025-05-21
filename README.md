@@ -1,51 +1,72 @@
--- Criação da tabela de permissões
-CREATE TABLE IF NOT EXISTS permission (
-    id SERIAL PRIMARY KEY,
-    description VARCHAR(255) NOT NULL UNIQUE
+-- LEADS
+CREATE TABLE leads (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(150) NOT NULL,
+    cpf_cnpj VARCHAR(20),
+    telefone VARCHAR(20),
+    origem VARCHAR(100),
+    status_leads VARCHAR(30),
+    observacao TEXT,
+    corretor_id BIGINT
 );
 
--- Criação da tabela de usuários
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    user_name VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    account_non_expired BOOLEAN DEFAULT TRUE,
-    account_non_locked BOOLEAN DEFAULT TRUE,
-    credentials_non_expired BOOLEAN DEFAULT TRUE,
-    enabled BOOLEAN DEFAULT TRUE
+-- ENDERECO_LEAD
+CREATE TABLE endereco_lead (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    lead_id BIGINT NOT NULL,
+    logradouro VARCHAR(200),
+    numero VARCHAR(20),
+    complemento VARCHAR(100),
+    bairro VARCHAR(100),
+    cidade VARCHAR(100),
+    estado VARCHAR(50),
+    cep VARCHAR(20),
+    FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE
 );
 
--- Tabela de relacionamento entre usuários e permissões
-CREATE TABLE IF NOT EXISTS user_permission (
-    id_user INTEGER NOT NULL,
-    id_permission INTEGER NOT NULL,
-    PRIMARY KEY (id_user, id_permission),
-    CONSTRAINT fk_user FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fk_permission FOREIGN KEY (id_permission) REFERENCES permission(id) ON DELETE CASCADE
+-- DOCUMENTOS DO LEAD
+CREATE TABLE documentos_lead (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    nome_arquivo VARCHAR(255),
+    tipo_arquivo VARCHAR(50),
+    data_upload TIMESTAMP,
+    conteudo LONGBLOB,
+    lead_id BIGINT,
+    FOREIGN KEY (lead_id) REFERENCES leads(id)
 );
 
--- Inserção de permissões padrão
-INSERT INTO permission (description) VALUES 
-    ('ADMIN'),
-    ('MANAGER'),
-    ('COMMON_USER')
-ON CONFLICT DO NOTHING;
+-- HISTÓRICO DO LEAD
+CREATE TABLE lead_historico (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    lead_id BIGINT,
+    data_modificacao TIMESTAMP,
+    acao VARCHAR(100),
+    usuario_id VARCHAR(100),
+    FOREIGN KEY (lead_id) REFERENCES leads(id)
+);
 
--- Gerar uma senha BCRYPT (substitua na linha abaixo)
--- Exemplo: senha = admin123 → hash gerado com BCrypt
--- Você pode gerar em Java com: new BCryptPasswordEncoder().encode("admin123")
--- Ou usar esse hash de exemplo: $2a$10$WzKcyqF9XJW5Ib7KvT1hXOwCzRHvP6eEZrHxv.BXOWj3jBEEz7V2y
+-- USUÁRIOS
+CREATE TABLE usuario (
+    id VARCHAR(100) PRIMARY KEY,  -- ID do Keycloak
+    nome VARCHAR(150),
+    telefone VARCHAR(20),
+    email VARCHAR(150)
+);
 
--- Inserção de usuários
-INSERT INTO users (user_name, password, account_non_expired, account_non_locked, credentials_non_expired, enabled)
-VALUES 
-    ('admin', '$2a$10$WzKcyqF9XJW5Ib7KvT1hXOwCzRHvP6eEZrHxv.BXOWj3jBEEz7V2y', true, true, true, true),
-    ('user', '$2a$10$WzKcyqF9XJW5Ib7KvT1hXOwCzRHvP6eEZrHxv.BXOWj3jBEEz7V2y', true, true, true, true);
+-- OCUPAÇÕES
+CREATE TABLE ocupacao (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    descricao VARCHAR(100)
+);
 
--- Relacionar permissões aos usuários
--- Verifica os IDs antes de inserir (use SELECT * FROM users; e SELECT * FROM permission;)
--- Exemplo com admin sendo ADMIN e user sendo COMMON_USER
-INSERT INTO user_permission (id_user, id_permission)
-VALUES
-    (1, 1), -- admin -> ADMIN
-    (2, 3); -- user -> COMMON_USER
+-- ASSOCIAÇÃO USUÁRIO-OCUPAÇÃO
+CREATE TABLE usuario_ocupacao (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id VARCHAR(255),
+    ocupacao_id BIGINT,
+    -- outros campos aqui...
+    CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+    CONSTRAINT fk_ocupacao FOREIGN KEY (ocupacao_id) REFERENCES ocupacao(id),
+    CONSTRAINT unique_usuario_ocupacao UNIQUE (usuario_id, ocupacao_id)
+);
+
