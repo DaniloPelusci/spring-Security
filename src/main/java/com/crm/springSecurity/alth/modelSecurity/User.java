@@ -75,4 +75,6 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { return authorities; }
     public void setAuthorities(List<Permission> authorities) { this.authorities = authorities; }
+
+
 }

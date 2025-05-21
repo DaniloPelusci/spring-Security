@@ -15,7 +15,7 @@ public class DocumentosLead {
     private String tipoArquivo;
 
     private LocalDateTime dataUpload;
-    
+
     @Column(name = "conteudo")
     private byte[] conteudo;
 
