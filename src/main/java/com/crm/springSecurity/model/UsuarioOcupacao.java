@@ -1,11 +1,15 @@
 package com.crm.springSecurity.model;
 
+
+
+import com.crm.springSecurity.alth.modelSecurity.User;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
-
 @Entity
-@Table(name = "usuarioOcupacao")
+@Table(
+        name = "usuario_ocupacao",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "ocupacao_id"})
+)
 public class UsuarioOcupacao {
 
     @Id
@@ -13,38 +17,22 @@ public class UsuarioOcupacao {
     private Long id;
 
     @ManyToOne
-    @MapsId("usuarioId")
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
-    @MapsId("ocupacaoId")
     @JoinColumn(name = "ocupacao_id")
     private Ocupacao ocupacao;
 
-    public Long getId() {
-        return id;
-    }
+    // Getters e Setters
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Ocupacao getOcupacao() {
-        return ocupacao;
-    }
-
-    public void setOcupacao(Ocupacao ocupacao) {
-        this.ocupacao = ocupacao;
-    }
+    public Ocupacao getOcupacao() { return ocupacao; }
+    public void setOcupacao(Ocupacao ocupacao) { this.ocupacao = ocupacao; }
 }
-
 

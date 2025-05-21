@@ -1,6 +1,7 @@
 package com.crm.springSecurity.model;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "ocupacao")
@@ -10,24 +11,20 @@ public class Ocupacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String descricao;
 
-    // getters e setters
+    @OneToMany(mappedBy = "ocupacao")
+    private List<UsuarioOcupacao> usuarioOcupacoes;
 
-    public Long getId() {
-        return id;
-    }
+    // Getters e Setters
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getDescricao() {
-        return descricao;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+    public List<UsuarioOcupacao> getUsuarioOcupacoes() { return usuarioOcupacoes; }
+    public void setUsuarioOcupacoes(List<UsuarioOcupacao> usuarioOcupacoes) { this.usuarioOcupacoes = usuarioOcupacoes; }
 }
-

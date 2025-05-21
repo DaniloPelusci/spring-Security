@@ -1,7 +1,8 @@
 package com.crm.springSecurity.model;
 
-import jakarta.persistence.*;
 
+import com.crm.springSecurity.alth.modelSecurity.User;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,53 +18,27 @@ public class LeadHistorico {
     private Lead lead;
 
     private LocalDateTime dataModificacao;
-
     private String acao;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    // getters e setters
+    // Getters e Setters
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Lead getLead() { return lead; }
+    public void setLead(Lead lead) { this.lead = lead; }
 
-    public Lead getLead() {
-        return lead;
-    }
+    public LocalDateTime getDataModificacao() { return dataModificacao; }
+    public void setDataModificacao(LocalDateTime dataModificacao) { this.dataModificacao = dataModificacao; }
 
-    public void setLead(Lead lead) {
-        this.lead = lead;
-    }
+    public String getAcao() { return acao; }
+    public void setAcao(String acao) { this.acao = acao; }
 
-    public LocalDateTime getDataModificacao() {
-        return dataModificacao;
-    }
-
-    public void setDataModificacao(LocalDateTime dataModificacao) {
-        this.dataModificacao = dataModificacao;
-    }
-
-    public String getAcao() {
-        return acao;
-    }
-
-    public void setAcao(String acao) {
-        this.acao = acao;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 }
 
