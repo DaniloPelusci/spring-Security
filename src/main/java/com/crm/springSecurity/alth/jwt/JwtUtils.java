@@ -1,6 +1,6 @@
-package com.crm.springSecurity.jwt;
+package com.crm.springSecurity.alth.jwt;
 
-import com.crm.springSecurity.modelSecurity.User;
+import com.crm.springSecurity.alth.modelSecurity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.GrantedAuthority;

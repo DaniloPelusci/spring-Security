@@ -1,8 +1,8 @@
-package com.crm.springSecurity.althControler;
+package com.crm.springSecurity.alth.althControler;
 
-import com.crm.springSecurity.jwt.JwtUtils;
-import com.crm.springSecurity.modelSecurity.User;
-import com.crm.springSecurity.repository.UserRepository;
+import com.crm.springSecurity.alth.jwt.JwtUtils;
+import com.crm.springSecurity.alth.modelSecurity.User;
+import com.crm.springSecurity.alth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/auth")
 public class AuthController {

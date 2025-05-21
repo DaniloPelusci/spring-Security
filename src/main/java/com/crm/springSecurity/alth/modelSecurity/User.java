@@ -1,4 +1,4 @@
-package com.crm.springSecurity.modelSecurity;
+package com.crm.springSecurity.alth.modelSecurity;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,7 +1,7 @@
-package com.crm.springSecurity.config;
+package com.crm.springSecurity.alth.config;
 
-import com.crm.springSecurity.jwt.JwtAuthFilter;
-import com.crm.springSecurity.service.UserDetailsServiceImpl;
+import com.crm.springSecurity.alth.jwt.JwtAuthFilter;
+import com.crm.springSecurity.alth.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

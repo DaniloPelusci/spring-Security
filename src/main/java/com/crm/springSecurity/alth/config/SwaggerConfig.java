@@ -1,4 +1,4 @@
-package com.crm.springSecurity.config;
+package com.crm.springSecurity.alth.config;
 
 import io.swagger.v3.oas.models.*;
 import io.swagger.v3.oas.models.info.Info;

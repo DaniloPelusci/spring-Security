@@ -1,6 +1,6 @@
-package com.crm.springSecurity.repository;
+package com.crm.springSecurity.alth.repository;
 
-import com.crm.springSecurity.modelSecurity.User;
+import com.crm.springSecurity.alth.modelSecurity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

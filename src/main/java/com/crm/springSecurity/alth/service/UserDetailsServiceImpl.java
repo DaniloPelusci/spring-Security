@@ -1,6 +1,6 @@
-package com.crm.springSecurity.service;
+package com.crm.springSecurity.alth.service;
 
-import com.crm.springSecurity.repository.UserRepository;
+import com.crm.springSecurity.alth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
