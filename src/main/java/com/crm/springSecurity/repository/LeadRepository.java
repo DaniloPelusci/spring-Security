@@ -1,7 +1,12 @@
 package com.crm.springSecurity.repository;
 
-import com.crm.springSecurity.model.Lead;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-public interface LeadRepository extends JpaRepository<Lead, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import com.crm.springSecurity.model.Lead;
+
+public interface LeadRepository extends JpaRepository<Lead, Long>, JpaSpecificationExecutor<Lead> {
+	 List<Lead> findByCorretorId(Long corretorId);
 }
