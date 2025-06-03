@@ -2,9 +2,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5422/crm
-    username: keycloak
-    password: keycloak
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: myApp
+    password: trust
   application:
     name: springSecurity
   jpa:
