@@ -102,6 +102,24 @@
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- No pom.xml -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Se quiser testar endpoints integrados com segurança: -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 
 	</dependencies>
 

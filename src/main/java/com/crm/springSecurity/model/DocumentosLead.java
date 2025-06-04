@@ -15,8 +15,10 @@ public class DocumentosLead {
     private String tipoArquivo;
     private LocalDate dataUpload;
 
-    @Lob
-    private byte[] conteudo;
+
+    @Column(name = "conteudo")
+    private byte[] conteudo; // CORRETO para BYTEA!
+
 
     @ManyToOne
     @JoinColumn(name = "lead_id")

@@ -4,8 +4,9 @@ public class LeadCadastroDTO {
     private String nome;
     private String telefone;
     private String origem;
-    private Long corretorId; // Opcional
-    // Getters e Setters
+    private Long corretorId;
+    private String statusLeads;
+    private String observacao;
 
     public String getNome() {
         return nome;
@@ -37,6 +38,22 @@ public class LeadCadastroDTO {
 
     public void setCorretorId(Long corretorId) {
         this.corretorId = corretorId;
+    }
+
+    public String getStatusLeads() {
+        return statusLeads;
+    }
+
+    public void setStatusLeads(String statusLeads) {
+        this.statusLeads = statusLeads;
+    }
+
+    public String getObservacao() {
+        return observacao;
+    }
+
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
     }
 }
 
