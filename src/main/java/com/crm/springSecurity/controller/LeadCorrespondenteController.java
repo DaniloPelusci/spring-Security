@@ -21,7 +21,7 @@ public class LeadCorrespondenteController {
     @Autowired
     private LeadService leadService;
 
-    @PreAuthorize("hasRole('CORRESPONDENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','CORRESPONDENTE')")
     @GetMapping("/completos")
     public ResponseEntity<List<LeadCorrespondenteDTO>> listarLeadsCompletos() {
         List<Lead> leads = leadService.listarLeadsAptosParaCorrespondente();
@@ -31,7 +31,7 @@ public class LeadCorrespondenteController {
         return ResponseEntity.ok(dtos);
     }
 
-    @PreAuthorize("hasRole('CORRESPONDENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','CORRESPONDENTE')")
     @PostMapping("/{leadId}/encaminhar")
     public ResponseEntity<Void> encaminharLead(@PathVariable Long leadId, Authentication authentication) {
         String username = authentication.getName();
