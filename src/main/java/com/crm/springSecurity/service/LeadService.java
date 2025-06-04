@@ -1,7 +1,11 @@
 package com.crm.springSecurity.service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.crm.springSecurity.repository.DocumentosLeadRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -16,6 +20,8 @@ import com.crm.springSecurity.model.dto.LeadCadastroDTO;
 import com.crm.springSecurity.model.dto.LeadFiltroDTO;
 import com.crm.springSecurity.repository.LeadRepository;
 import com.crm.springSecurity.specification.LeadSpecification;
+import com.crm.springSecurity.model.DocumentosLead;
+import com.crm.springSecurity.model.TipoDocumento;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -27,6 +33,8 @@ public class LeadService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private DocumentosLeadRepository documentosLeadRepository;
 
     public Lead cadastrarLead(LeadCadastroDTO leadDTO, Authentication authentication) {
         String username = authentication.getName();
@@ -123,6 +131,32 @@ public class LeadService {
     private String getUsuarioLogado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName(); // retorna o username
+    }
+
+    public List<Lead> listarLeadsAptosParaCorrespondente() {
+        LocalDate limite = LocalDate.now().minusMonths(3);
+        return leadRepository.findAll().stream()
+                .filter(lead -> {
+                    List<DocumentosLead> docs = documentosLeadRepository.findByLeadId(lead.getId());
+                    boolean comprovanteEnderecoValido = docs.stream()
+                            .anyMatch(doc -> doc.getTipoDocumento().getDescricao() == "COMPROVANTE_ENDERECO"
+                                    && doc.getDataEmissao() != null
+                                    && !doc.getDataEmissao().isBefore(limite));
+                    // Adicione aqui a lógica para exigir outros documentos obrigatórios se desejar
+                    return comprovanteEnderecoValido;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void aceitarLeadPorCorrespondente(Long leadId, String usernameCorrespondente) {
+        Lead lead = leadRepository.findById(leadId)
+                .orElseThrow(() -> new RuntimeException("Lead não encontrado"));
+        User correspondente = userRepository.findByUsername(usernameCorrespondente)
+                .orElseThrow(() -> new RuntimeException("Usuário correspondente não encontrado"));
+        lead.setCorrespondente(correspondente);
+        lead.setStatusLead("ENCAMINHADO_CORRESPONDENTE");
+        leadRepository.save(lead);
     }
 
 }

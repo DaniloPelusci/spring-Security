@@ -2,6 +2,7 @@ package com.crm.springSecurity.model;
 
 import com.crm.springSecurity.alth.modelSecurity.User;
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "leads")
@@ -15,15 +16,19 @@ public class Lead {
     private String cpfCnpj;
     private String telefone;
     private String origem;
-
-    @Column(name = "status_leads")
-    private String statusLeads;
-
+    private String statusLeads; // Campo antigo
     private String observacao;
 
     @ManyToOne
     @JoinColumn(name = "corretor_id")
     private User corretor;
+
+    @ManyToOne
+    @JoinColumn(name = "correspondente_id")
+    private User correspondente;
+
+    @Column(name = "status_lead")
+    private String statusLead;
 
     // Getters e Setters
 
@@ -50,5 +55,12 @@ public class Lead {
 
     public User getCorretor() { return corretor; }
     public void setCorretor(User corretor) { this.corretor = corretor; }
-}
 
+    public User getCorrespondente() { return correspondente; }
+    public void setCorrespondente(User correspondente) { this.correspondente = correspondente; }
+
+    public String getStatusLead() { return statusLead; }
+    public void setStatusLead(String statusLead) { this.statusLead = statusLead; }
+
+    // Construtores, equals, hashCode, etc. conforme padrão do projeto.
+}
