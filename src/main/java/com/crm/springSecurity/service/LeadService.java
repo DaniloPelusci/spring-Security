@@ -2,6 +2,7 @@ package com.crm.springSecurity.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.crm.springSecurity.repository.DocumentosLeadRepository;
@@ -159,5 +160,16 @@ public class LeadService {
         leadRepository.save(lead);
     }
 
+    public LeadService(LeadRepository leadRepository) {
+        this.leadRepository = leadRepository;
+    }
 
+    public String gerarCodigoUpload(Long leadId) {
+        Lead lead = leadRepository.findById(leadId)
+                .orElseThrow(() -> new RuntimeException("Lead não encontrado"));
+        String codigo = UUID.randomUUID().toString();
+        lead.setCodigoUpload(codigo);
+        leadRepository.save(lead);
+        return codigo;
+    }
 }
