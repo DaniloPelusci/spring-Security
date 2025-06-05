@@ -2,6 +2,7 @@ package com.crm.springSecurity.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -171,5 +172,25 @@ public class LeadService {
         lead.setCodigoUpload(codigo);
         leadRepository.save(lead);
         return codigo;
+    }
+
+    public boolean podeBaixarDocumento(Lead lead, User user) {
+        if (user.temRole("ADMIN")) return true;
+
+        if (user.temRole("CORRETOR")
+                && lead.getCorretor() != null
+                && lead.getCorretor().getId().equals(user.getId())) {
+            return true;
+        }
+
+        if (user.temRole("CORRESPONDENTE")) {
+            if (lead.getCorrespondente() == null) return true;
+            if (lead.getCorrespondente().getId().equals(user.getId())) return true;
+        }
+        return false;
+    }
+
+    public Optional<Lead> findbyId(Long leadId) {
+       return leadRepository.findById(leadId);
     }
 }

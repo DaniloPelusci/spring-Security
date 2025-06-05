@@ -77,4 +77,9 @@ public class User implements UserDetails {
     public void setAuthorities(List<Permission> authorities) { this.authorities = authorities; }
 
 
+    public boolean temRole(String role) {
+        if (authorities == null) return false;
+        return authorities.stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_" + role));
+    }
 }
