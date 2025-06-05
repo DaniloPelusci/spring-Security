@@ -1,8 +1,11 @@
 package com.crm.springSecurity.controller;
 
+import com.crm.springSecurity.model.DocumentosLead;
 import com.crm.springSecurity.model.Lead;
+import com.crm.springSecurity.model.TipoDocumento;
 import com.crm.springSecurity.model.dto.LeadCadastroDTO;
 import com.crm.springSecurity.model.dto.LeadFiltroDTO;
+import com.crm.springSecurity.repository.DocumentosLeadRepository;
 import com.crm.springSecurity.service.LeadService;
 
 import java.util.List;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/leads")
 public class LeadController {
+    @Autowired
+    private DocumentosLeadRepository repo;
 
     @Autowired
     private LeadService leadService;
@@ -45,6 +50,19 @@ public class LeadController {
     @PostMapping("/filtrar")
     public List<Lead> buscarPorFiltro(@RequestBody LeadFiltroDTO filtro) {
         return leadService.buscarPorFiltro(filtro);
+    }
+
+    @PutMapping("/{id}/classificar")
+    public ResponseEntity<?> classificarDocumento(
+            @PathVariable Long id,
+            @RequestParam Long tipoDocumentoId) {
+        DocumentosLead doc = repo.findById(id).orElse(null);
+        if (doc == null) return ResponseEntity.notFound().build();
+        TipoDocumento tipo = tipoDocRepo.findById(tipoDocumentoId).orElse(null);
+        if (tipo == null) return ResponseEntity.badRequest().body("Tipo de documento inválido.");
+        doc.setTipoDocumento(tipo);
+        repo.save(doc);
+        return ResponseEntity.ok("Documento classificado.");
     }
 }
 

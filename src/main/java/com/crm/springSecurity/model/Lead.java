@@ -30,7 +30,18 @@ public class Lead {
     @Column(name = "status_lead")
     private String statusLead;
 
+    @Column(unique = true)
+    private String codigoUpload;
+
     // Getters e Setters
+
+    public String getCodigoUpload() {
+        return codigoUpload;
+    }
+
+    public void setCodigoUpload(String codigoUpload) {
+        this.codigoUpload = codigoUpload;
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
