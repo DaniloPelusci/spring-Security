@@ -1,6 +1,7 @@
 package com.crm.springSecurity.controller;
 
 import com.crm.springSecurity.alth.modelSecurity.User;
+import com.crm.springSecurity.exeption.ApiErrorResponse;
 import com.crm.springSecurity.model.DocumentosLead;
 import com.crm.springSecurity.model.Lead;
 import com.crm.springSecurity.repository.DocumentosLeadRepository;
@@ -74,13 +75,21 @@ public class DocumentosLeadController {
         Lead lead = leadService.findbyId(leadId).get();
 
         if (!leadService.podeBaixarDocumento(lead, user)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado.");
+            ApiErrorResponse error = new ApiErrorResponse(
+                    HttpStatus.FORBIDDEN.value(),
+                    "Acesso negado. Você não tem permissão para baixar este documento."
+            );
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
         }
 
         DocumentosLead documento = documentosLeadService.buscarPorId(documentoId).get();
 
         if (!documento.getLead().getId().equals(leadId)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Documento não pertence a este lead.");
+            ApiErrorResponse error = new ApiErrorResponse(
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Documento não pertence a este lead."
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
         // Retornar o conteúdo do bytea como download
