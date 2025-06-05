@@ -40,7 +40,7 @@ public class Lead {
     }
 
     public void setCodigoUpload(String codigoUpload) {
-        this.codigoUpload = codigoUpload;
+            this.codigoUpload = codigoUpload;
     }
 
     public Long getId() { return id; }
