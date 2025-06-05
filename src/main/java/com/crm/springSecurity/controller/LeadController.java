@@ -69,7 +69,7 @@ public class LeadController {
         return ResponseEntity.ok("Documento classificado.");
     }
 
-    
+
     @PostMapping("/{id}/gerar-link-upload")
     // @PreAuthorize("hasRole('CORRETOR') or hasRole('ADMIN')") // descomente se já usar roles
     public String gerarLinkUpload(@PathVariable Long id) {
