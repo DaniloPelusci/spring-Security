@@ -6,6 +6,7 @@ import com.crm.springSecurity.model.TipoDocumento;
 import com.crm.springSecurity.model.dto.LeadCadastroDTO;
 import com.crm.springSecurity.model.dto.LeadFiltroDTO;
 import com.crm.springSecurity.repository.DocumentosLeadRepository;
+import com.crm.springSecurity.repository.TipoDocumentoRepository;
 import com.crm.springSecurity.service.LeadService;
 
 import java.util.List;
@@ -26,6 +27,9 @@ public class LeadController {
 
     @Autowired
     private LeadService leadService;
+
+    @Autowired
+    private TipoDocumentoRepository tipoDocRepo;
 
     @PostMapping
     public ResponseEntity<?> criarLead(@RequestBody LeadCadastroDTO leadDTO, Authentication authentication) {

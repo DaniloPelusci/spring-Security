@@ -24,7 +24,6 @@ import com.crm.springSecurity.model.DocumentosLead;
 import com.crm.springSecurity.model.TipoDocumento;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class LeadService {
@@ -160,19 +159,5 @@ public class LeadService {
         leadRepository.save(lead);
     }
 
-    public boolean salvarDocumentoPorCodigo(String codigo, MultipartFile file) {
-        Lead lead = leadRepository.findByCodigoUpload(codigo);
-        if (lead == null) return false;
-        // Cria um novo DocumentosLead com tipoDocumento null ou "PENDENTE"
-        DocumentosLead doc = new DocumentosLead();
-        doc.setNomeArquivo(file.getOriginalFilename());
-        doc.setTipoArquivo(file.getContentType());
-        doc.setDataUpload(LocalDate.now());
-        doc.setConteudo(file.getBytes());
-        doc.setLead(lead);
-        doc.setTipoDocumento(null); // Ainda não classificado
-        doc.setDataEmissao(null);
-        documentosLeadRepository.save(doc);
-        return true;
-    }
+
 }
