@@ -3,11 +3,13 @@ package com.crm.springSecurity.controller;
 import com.crm.springSecurity.alth.modelSecurity.User;
 import com.crm.springSecurity.model.dto.UserCadastroDTO;
 import com.crm.springSecurity.model.dto.UserDTO;
+import com.crm.springSecurity.model.dto.UserEdicaoDTO;
 import com.crm.springSecurity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +32,14 @@ public class UserController {
     public ResponseEntity<UserDTO> cadastrarUsuario(@RequestBody UserCadastroDTO dto) {
         User user = userService.cadastrar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserDTO.fromEntity(user));
+    }
+
+    @PutMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserDTO> atualizarProprioUsuario(@RequestBody UserEdicaoDTO dto, Authentication authenticationauth) {
+        String username = authenticationauth.getName();
+        User atualizado = userService.atualizarProprioUsuario(username, dto);
+        return ResponseEntity.ok(UserDTO.fromEntity(atualizado));
     }
 
     // Demais endpoints...
