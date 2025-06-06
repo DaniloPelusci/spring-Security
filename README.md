@@ -252,11 +252,11 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Permissões
 INSERT INTO permission (description) VALUES
-    ('ADMIN'),
-    ('MANAGER'),
-    ('COMMON_USER'),
-    ('CORRETOR'),
-    ('CORRESPONDENTE')
+    ('ROLE_ADMIN'),
+    ('ROLE_MANAGER'),
+    ('ROLE_COMMON_USER'),
+    ('ROLE_CORRETOR'),
+    ('ROLE_CORRESPONDENTE')
 ON CONFLICT (description) DO NOTHING;
 
 -- Usuários
