@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.crm.springSecurity.model.dto.LeadEdicaoDTO;
 import com.crm.springSecurity.repository.DocumentosLeadRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +90,7 @@ public class LeadService {
 
         // Exemplo: só ADMIN vê tudo
         boolean isAdmin = user.getAuthorities().stream()
-                              .anyMatch(role -> role.getAuthority().equalsIgnoreCase("ADMIN"));
+                              .anyMatch(role -> role.getAuthority().equalsIgnoreCase("ROLE_ADMIN"));
 
         if (isAdmin) {
             return leadRepository.findAll();
@@ -188,6 +189,16 @@ public class LeadService {
             if (lead.getCorrespondente().getId().equals(user.getId())) return true;
         }
         return false;
+    }
+
+    public Lead atualizar(Long id, LeadEdicaoDTO dto) {
+        Lead lead = leadRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Lead não encontrado"));
+        // Atualize só os campos permitidos:
+        if (dto.getNome() != null) lead.setNome(dto.getNome());
+        if (dto.getTelefone() != null) lead.setTelefone(dto.getTelefone());
+        // ... outros campos conforme necessário
+        return leadRepository.save(lead);
     }
 
     public Optional<Lead> findbyId(Long leadId) {

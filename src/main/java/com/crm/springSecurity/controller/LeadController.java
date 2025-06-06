@@ -4,6 +4,7 @@ import com.crm.springSecurity.model.DocumentosLead;
 import com.crm.springSecurity.model.Lead;
 import com.crm.springSecurity.model.TipoDocumento;
 import com.crm.springSecurity.model.dto.LeadCadastroDTO;
+import com.crm.springSecurity.model.dto.LeadEdicaoDTO;
 import com.crm.springSecurity.model.dto.LeadFiltroDTO;
 import com.crm.springSecurity.repository.DocumentosLeadRepository;
 import com.crm.springSecurity.repository.TipoDocumentoRepository;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,14 @@ public class LeadController {
 
     @Autowired
     private TipoDocumentoRepository tipoDocRepo;
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','CORRETOR')")
+    public ResponseEntity<LeadEdicaoDTO> atualizarLead(@PathVariable Long id, @RequestBody LeadEdicaoDTO dto) {
+        Lead leadAtualizado = leadService.atualizar(id, dto);
+        return ResponseEntity.ok(LeadEdicaoDTO.fromEntity(leadAtualizado));
+    }
+
 
     @PostMapping
     public ResponseEntity<?> criarLead(@RequestBody LeadCadastroDTO leadDTO, Authentication authentication) {
