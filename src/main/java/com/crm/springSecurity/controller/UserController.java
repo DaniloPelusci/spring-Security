@@ -42,6 +42,14 @@ public class UserController {
         return ResponseEntity.ok(UserDTO.fromEntity(atualizado));
     }
 
+    @GetMapping("/corretores")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('GERENTE_DE_LEADS')")
+    public ResponseEntity<List<UserDTO>> listarCorretores() {
+        List<UserDTO> corretores = userService.buscarCorretores();
+        return ResponseEntity.ok(corretores);
+    }
+
+
     // Demais endpoints...
 }
 
