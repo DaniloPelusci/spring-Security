@@ -59,7 +59,7 @@ public class UserService {
 
     public List<UserDTO> buscarCorretores() {
         // Busca todos usuários com role 'CORRETOR'
-        return userRepository.findByAuthoritiesDescription("CORRETOR")
+        return userRepository.findByAuthoritiesDescription("ROLE_CORRETOR")
                 .stream()
                 .map(UserDTO::fromEntity)
                 .toList();
