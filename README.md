@@ -496,5 +496,44 @@ FROM leads l, users u
 WHERE l.nome = 'Bruno Santos' AND u.user_name = 'bruno'
 ON CONFLICT DO NOTHING;
 
+------------------------------------xxxxxxxxxxxxxxxxxxxxxxxxx
+
+-- 1. Descubra os IDs necessários (só rode os SELECTs se quiser confirmar; não precisa copiar para o script principal)
+
+-- SELECT id FROM users WHERE user_name = 'joao';                -- Exemplo: 3
+-- SELECT id FROM tipo_documento WHERE descricao = 'COMPROVANTE_ENDERECO'; -- Exemplo: 1
+
+-- 2. Insere o lead sem correspondente
+INSERT INTO leads (
+nome, cpf_cnpj, telefone, origem, status_leads, observacao,
+corretor_id, correspondente_id, status_lead, codigo_upload
+)
+VALUES (
+'Lead Apto Correspondente',
+'99887766554',
+'62999990010',
+'Google',
+'NOVO',
+'Teste: lead apto para correspondente',
+(SELECT id FROM users WHERE user_name = 'joao'),
+NULL,
+'NOVO',
+uuid_generate_v4()
+)
+RETURNING id;
+
+-- 3. Depois de rodar o insert acima, ANOTE o id retornado (exemplo: 12) e insira o documento
+-- Troque 12 pelo id retornado e ajuste o tipo_documento_id se necessário (veja no SELECT acima)
+
+INSERT INTO documentos_lead (
+nome_arquivo, tipo_arquivo, data_upload, conteudo, lead_id, tipo_documento_id, data_emissao
+) VALUES (
+'comprovante_endereco_lead_apto.pdf', 'PDF', current_date, null,
+(SELECT id FROM leads WHERE nome = 'Lead Apto Correspondente' ORDER BY id DESC LIMIT 1),
+(SELECT id FROM tipo_documento WHERE descricao = 'COMPROVANTE_ENDERECO'),
+(current_date - interval '1 month')
+);
+
+
 
 

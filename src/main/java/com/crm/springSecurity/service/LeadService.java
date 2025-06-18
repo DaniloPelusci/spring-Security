@@ -142,7 +142,7 @@ public class LeadService {
                 .filter(lead -> {
                     List<DocumentosLead> docs = documentosLeadRepository.findByLeadId(lead.getId());
                     boolean comprovanteEnderecoValido = docs.stream()
-                            .anyMatch(doc -> doc.getTipoDocumento().getDescricao() == "COMPROVANTE_ENDERECO"
+                            .anyMatch(doc -> doc.getTipoDocumento().getDescricao().equals("COMPROVANTE_ENDERECO")
                                     && doc.getDataEmissao() != null
                                     && !doc.getDataEmissao().isBefore(limite));
                     // Adicione aqui a lógica para exigir outros documentos obrigatórios se desejar
