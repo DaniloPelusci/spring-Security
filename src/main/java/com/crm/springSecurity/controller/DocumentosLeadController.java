@@ -8,6 +8,12 @@ import com.crm.springSecurity.repository.DocumentosLeadRepository;
 import com.crm.springSecurity.service.DocumentosLeadService;
 import com.crm.springSecurity.service.LeadService;
 import com.crm.springSecurity.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +24,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(
+        name = "Documentos Lead",
+        description = "APIs para gerenciamento e download de documentos de leads"
+)
 @RestController
 @RequestMapping("/api/documentos-lead")
 public class DocumentosLeadController {
@@ -33,18 +43,50 @@ public class DocumentosLeadController {
     @Autowired
     private DocumentosLeadService documentosLeadService;
 
+    @Operation(
+            summary = "Criar novo documento para lead",
+            description = "Cria e salva um novo documento para um lead. Requer papel ADMIN ou CORRETOR.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Documento criado com sucesso",
+                            content = @Content(schema = @Schema(implementation = DocumentosLead.class))),
+                    @ApiResponse(responseCode = "403", description = "Acesso negado")
+            }
+    )
     @PreAuthorize("hasAnyRole('ADMIN', 'CORRETOR')")
     @PostMapping
     public ResponseEntity<DocumentosLead> criar(@RequestBody DocumentosLead doc) {
         return ResponseEntity.ok(service.salvar(doc));
     }
 
+    @Operation(
+            summary = "Listar documentos de um lead",
+            description = "Lista todos os documentos associados a um lead. Requer papel ADMIN ou CORRETOR.",
+            parameters = {
+                    @Parameter(name = "leadId", description = "ID do lead", required = true)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Lista de documentos retornada com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Acesso negado")
+            }
+    )
     @PreAuthorize("hasAnyRole('ADMIN', 'CORRETOR')")
     @GetMapping("/lead/{leadId}")
     public ResponseEntity<List<DocumentosLead>> listarPorLead(@PathVariable Long leadId) {
         return ResponseEntity.ok(service.listarPorLead(leadId));
     }
 
+    @Operation(
+            summary = "Buscar documento por ID",
+            description = "Busca um documento pelo seu ID. Requer papel ADMIN ou CORRETOR.",
+            parameters = {
+                    @Parameter(name = "id", description = "ID do documento", required = true)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Documento retornado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Documento não encontrado"),
+                    @ApiResponse(responseCode = "403", description = "Acesso negado")
+            }
+    )
     @PreAuthorize("hasAnyRole('ADMIN', 'CORRETOR')")
     @GetMapping("/{id}")
     public ResponseEntity<DocumentosLead> buscarPorId(@PathVariable Long id) {
@@ -53,6 +95,17 @@ public class DocumentosLeadController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(
+            summary = "Deletar documento",
+            description = "Remove um documento pelo ID. Requer papel ADMIN ou CORRETOR.",
+            parameters = {
+                    @Parameter(name = "id", description = "ID do documento", required = true)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Documento deletado com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Acesso negado")
+            }
+    )
     @PreAuthorize("hasAnyRole('ADMIN', 'CORRETOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
@@ -60,11 +113,20 @@ public class DocumentosLeadController {
         return ResponseEntity.noContent().build();
     }
 
-    public DocumentosLead buscarDocumentoPorId(Long documentoId) {
-        return documentoLeadRepository.findById(documentoId)
-                .orElseThrow(() -> new EntityNotFoundException("Documento não encontrado"));
-    }
-
+    @Operation(
+            summary = "Download de documento",
+            description = "Permite baixar o documento se o usuário possuir permissão. Valida se o documento pertence ao lead e se o usuário pode acessar. Retorna arquivo binário.",
+            parameters = {
+                    @Parameter(name = "leadId", description = "ID do lead", required = true),
+                    @Parameter(name = "documentoId", description = "ID do documento", required = true)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Arquivo baixado com sucesso"),
+                    @ApiResponse(responseCode = "403", description = "Acesso negado ou sem permissão para baixar o documento"),
+                    @ApiResponse(responseCode = "400", description = "Documento não pertence a este lead"),
+                    @ApiResponse(responseCode = "404", description = "Lead ou documento não encontrado")
+            }
+    )
     @GetMapping("/{documentoId}/download")
     public ResponseEntity<?> baixarDocumento(
             @PathVariable Long leadId,
@@ -98,5 +160,9 @@ public class DocumentosLeadController {
                 .body(documento.getConteudo());
     }
 
+    // Este método não é endpoint REST, então não precisa de documentação Swagger.
+    public DocumentosLead buscarDocumentoPorId(Long documentoId) {
+        return documentoLeadRepository.findById(documentoId)
+                .orElseThrow(() -> new EntityNotFoundException("Documento não encontrado"));
+    }
 }
-
