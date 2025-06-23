@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -164,5 +165,13 @@ public class DocumentosLeadController {
     public DocumentosLead buscarDocumentoPorId(Long documentoId) {
         return documentoLeadRepository.findById(documentoId)
                 .orElseThrow(() -> new EntityNotFoundException("Documento não encontrado"));
+    }
+    @PostMapping("/api/leads/upload-documentos")
+    public ResponseEntity<?> uploadDocumentos(
+            @RequestParam("leadId") Long leadId,
+            @RequestParam("arquivos") List<MultipartFile> arquivos
+    ) {
+             documentosLeadService.salvarArquivo(leadId, arquivos);
+        return ResponseEntity.ok().build();
     }
 }
