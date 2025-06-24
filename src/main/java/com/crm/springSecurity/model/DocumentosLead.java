@@ -1,5 +1,6 @@
 package com.crm.springSecurity.model;
 
+import com.crm.springSecurity.model.dto.DocumentoLeadDTO;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -55,4 +56,17 @@ public class DocumentosLead {
 
     public LocalDate getDataEmissao() { return dataEmissao; }
     public void setDataEmissao(LocalDate dataEmissao) { this.dataEmissao = dataEmissao; }
+
+
+    public DocumentoLeadDTO fromEntity(DocumentosLead doc) {
+        DocumentoLeadDTO dto = new DocumentoLeadDTO();
+        dto.setId(doc.getId());
+        dto.setNomeArquivo(doc.getNomeArquivo());
+        dto.setTipoArquivo(doc.getTipoArquivo());
+        dto.setDataUpload(doc.getDataUpload());
+        dto.setTipoDocumento(doc.getTipoDocumento().getDescricao());
+        dto.setDataEmissao(doc.getDataEmissao());
+        return dto;
+    }
+
 }

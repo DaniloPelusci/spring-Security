@@ -16,12 +16,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -43,6 +46,8 @@ public class DocumentosLeadController {
     private UserService userService;
     @Autowired
     private DocumentosLeadService documentosLeadService;
+    @Autowired
+    private DocumentosLeadRepository documentosLeadRepository;
 
     @Operation(
             summary = "Criar novo documento para lead",
@@ -173,5 +178,15 @@ public class DocumentosLeadController {
     ) {
              documentosLeadService.salvarArquivo(leadId, arquivos);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/documentos-lead/{id}/download")
+    public ResponseEntity<byte[]> downloadDocumento(@PathVariable Long id) {
+        DocumentosLead doc = documentosLeadRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + doc.getNomeArquivo() + "\"")
+                .contentType(MediaType.parseMediaType(doc.getTipoArquivo()))
+                .body(doc.getConteudo());
     }
 }
