@@ -46,37 +46,35 @@ public class DocumentosLeadService {
 
 
     @Transactional
-    public void salvarArquivo(Long leadId, List<MultipartFile> arquivos) {
+    public void salvarArquivo(Long leadId, List<MultipartFile> arquivos, List<Long> tiposDocumentoId) {
         // Verifique se o lead existe, se quiser
         Lead lead = leadRepository.findById(leadId).orElseThrow(() -> new RuntimeException("Lead não encontrado"));
 
-        for (MultipartFile file : arquivos) {
+        for (int i = 0; i < arquivos.size(); i++) {
+            MultipartFile arquivo = arquivos.get(i);
+            Long tipoId = tiposDocumentoId.get(i);
             try {
-                String nomeArquivo = file.getOriginalFilename();
-                String tipoArquivo = file.getContentType();
-
-                // Exemplo: pegar tipo_documento pelo nome do arquivo (ajuste conforme sua regra)
-                // Exemplo para salvar tudo como 'COMPROVANTE_ENDERECO' (ajuste se quiser identificar pelo nome):
-                TipoDocumento tipoDocumento = tipoDocumentoRepository.findByDescricao("COMPROVANTE_ENDERECO")
-                        .orElseThrow(() -> new RuntimeException("Tipo de documento não encontrado"));
-
+                String nomeArquivo = arquivo.getOriginalFilename();
+                String tipoArquivo = arquivo.getContentType();
+                TipoDocumento tipoDocumento = tipoDocumentoRepository.getReferenceById(tipoId);
 
                 DocumentosLead doc = new DocumentosLead();
                 doc.setNomeArquivo(nomeArquivo);
                 doc.setTipoArquivo(tipoArquivo);
                 doc.setDataUpload(LocalDate.now());
-                doc.setConteudo(file.getBytes());
+                doc.setConteudo(arquivo.getBytes());
                 doc.setLead(lead);
-                doc.setTipoDocumento(tipoDocumento); // Ajuste para o seu model
-                doc.setDataEmissao(LocalDate.now()); // Ou receba do front
+                doc.setTipoDocumento(tipoDocumento);
+                doc.setDataEmissao(LocalDate.now());
 
                 documentosLeadRepository.save(doc);
 
             } catch (IOException e) {
-                throw new RuntimeException("Erro ao processar arquivo: " + file.getOriginalFilename(), e);
+                throw new RuntimeException("Erro ao processar arquivo: " + arquivo.getOriginalFilename(), e);
             }
         }
     }
+
 
 }
 

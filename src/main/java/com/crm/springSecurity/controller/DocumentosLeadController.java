@@ -133,54 +133,54 @@ public class DocumentosLeadController {
                     @ApiResponse(responseCode = "404", description = "Lead ou documento não encontrado")
             }
     )
-    @GetMapping("/{documentoId}/download")
-    public ResponseEntity<?> baixarDocumento(
-            @PathVariable Long leadId,
-            @PathVariable Long documentoId,
-            Authentication authentication) {
+//    @GetMapping("/{documentoId}/download")
+//    public ResponseEntity<?> baixarDocumento(
+//            @PathVariable Long leadId,
+//            @PathVariable Long documentoId,
+//            Authentication authentication) {
+//
+//        User user = userService.getUsuarioByAuthentication(authentication);
+//        Lead lead = leadService.findbyId(leadId).get();
+//
+//        if (!leadService.podeBaixarDocumento(lead, user)) {
+//            ApiErrorResponse error = new ApiErrorResponse(
+//                    HttpStatus.FORBIDDEN.value(),
+//                    "Acesso negado. Você não tem permissão para baixar este documento."
+//            );
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+//        }
+//
+//        DocumentosLead documento = documentosLeadService.buscarPorId(documentoId).get();
+//
+//        if (!documento.getLead().getId().equals(leadId)) {
+//            ApiErrorResponse error = new ApiErrorResponse(
+//                    HttpStatus.BAD_REQUEST.value(),
+//                    "Documento não pertence a este lead."
+//            );
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+//        }
+//
+//        // Retornar o conteúdo do bytea como download
+//        return ResponseEntity.ok()
+//                .header("Content-Disposition", "attachment; filename=\"" + documento.getNomeArquivo() + "\"")
+//                .body(documento.getConteudo());
+//    }
+//
+//    // Este método não é endpoint REST, então não precisa de documentação Swagger.
+//    public DocumentosLead buscarDocumentoPorId(Long documentoId) {
+//        return documentoLeadRepository.findById(documentoId)
+//                .orElseThrow(() -> new EntityNotFoundException("Documento não encontrado"));
+//    }
+//    @PostMapping("/api/leads/upload-documentos")
+//    public ResponseEntity<?> uploadDocumentos(
+//            @RequestParam("leadId") Long leadId,
+//            @RequestParam("arquivos") List<MultipartFile> arquivos
+//    ) {
+//             documentosLeadService.salvarArquivo(leadId, arquivos);
+//        return ResponseEntity.ok().build();
+//    }
 
-        User user = userService.getUsuarioByAuthentication(authentication);
-        Lead lead = leadService.findbyId(leadId).get();
-
-        if (!leadService.podeBaixarDocumento(lead, user)) {
-            ApiErrorResponse error = new ApiErrorResponse(
-                    HttpStatus.FORBIDDEN.value(),
-                    "Acesso negado. Você não tem permissão para baixar este documento."
-            );
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
-        }
-
-        DocumentosLead documento = documentosLeadService.buscarPorId(documentoId).get();
-
-        if (!documento.getLead().getId().equals(leadId)) {
-            ApiErrorResponse error = new ApiErrorResponse(
-                    HttpStatus.BAD_REQUEST.value(),
-                    "Documento não pertence a este lead."
-            );
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-        }
-
-        // Retornar o conteúdo do bytea como download
-        return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=\"" + documento.getNomeArquivo() + "\"")
-                .body(documento.getConteudo());
-    }
-
-    // Este método não é endpoint REST, então não precisa de documentação Swagger.
-    public DocumentosLead buscarDocumentoPorId(Long documentoId) {
-        return documentoLeadRepository.findById(documentoId)
-                .orElseThrow(() -> new EntityNotFoundException("Documento não encontrado"));
-    }
-    @PostMapping("/api/leads/upload-documentos")
-    public ResponseEntity<?> uploadDocumentos(
-            @RequestParam("leadId") Long leadId,
-            @RequestParam("arquivos") List<MultipartFile> arquivos
-    ) {
-             documentosLeadService.salvarArquivo(leadId, arquivos);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/api/documentos-lead/{id}/download")
+    @GetMapping("/{id}/download")
     public ResponseEntity<byte[]> downloadDocumento(@PathVariable Long id) {
         DocumentosLead doc = documentosLeadRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -189,4 +189,15 @@ public class DocumentosLeadController {
                 .contentType(MediaType.parseMediaType(doc.getTipoArquivo()))
                 .body(doc.getConteudo());
     }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadDocumentos(
+            @RequestParam("leadId") Long leadId,
+            @RequestParam("arquivos") List<MultipartFile> arquivos,
+            @RequestParam("tiposDocumentoId") List<Long> tiposDocumentoId
+    ) {
+        documentosLeadService.salvarArquivo(leadId, arquivos,tiposDocumentoId);
+        return ResponseEntity.ok().build();
+    }
+
 }
