@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class DocumentoAdmController {
 
     @Autowired
-    private DocumentosLeadRepository repo;
+    private DocumentosLeadRepository repoDocumentos;
 
     @Autowired
     private TipoDocumentoRepository tipoDocRepo;
@@ -42,14 +42,14 @@ public class DocumentoAdmController {
     public ResponseEntity<?> classificarDocumento(
             @PathVariable Long id,
             @RequestParam Long tipoDocumentoId) {
-        var docOpt = repo.findById(id);
+        var docOpt = repoDocumentos.findById(id);
         var tipoOpt = tipoDocRepo.findById(tipoDocumentoId);
         if (docOpt.isEmpty() || tipoOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("Documento ou tipo de documento não encontrado.");
         }
         DocumentosLead doc = docOpt.get();
         doc.setTipoDocumento(tipoOpt.get());
-        repo.save(doc);
+        repoDocumentos.save(doc);
         return ResponseEntity.ok("Documento classificado.");
     }
 }

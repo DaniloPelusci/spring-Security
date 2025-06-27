@@ -211,6 +211,7 @@ CREATE TABLE IF NOT EXISTS endereco_lead (
     cidade VARCHAR(100),
     estado VARCHAR(50),
     cep VARCHAR(20),
+    principal BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_lead_endereco FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE
 );
 

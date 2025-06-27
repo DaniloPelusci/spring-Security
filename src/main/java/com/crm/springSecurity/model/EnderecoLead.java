@@ -21,8 +21,18 @@ public class EnderecoLead {
     private String cidade;
     private String estado;
     private String cep;
+    private Boolean principal = false;
 
     // Getters e Setters
+
+
+    public Boolean getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(Boolean principal) {
+        this.principal = principal;
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
