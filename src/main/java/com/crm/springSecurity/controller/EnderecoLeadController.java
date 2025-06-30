@@ -91,4 +91,32 @@ public class EnderecoLeadController {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(
+            summary = "Atualizar endereço",
+            description = "Atualiza os dados de um endereço existente. Requer papel ADMIN ou CORRETOR.",
+            parameters = {
+                    @Parameter(name = "id", description = "ID do endereço", required = true)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Endereço atualizado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Endereço não encontrado"),
+                    @ApiResponse(responseCode = "403", description = "Acesso negado")
+            }
+    )
+    @PreAuthorize("hasAnyRole('ADMIN', 'CORRETOR')")
+    @PutMapping("/{id}")
+    public ResponseEntity<EnderecoLead> atualizar(
+            @PathVariable Long id,
+            @RequestBody EnderecoLead endereco
+    ) {
+        EnderecoLead atualizado = service.atualizar(endereco);
+        return ResponseEntity.ok(atualizado);
+    }
+
+    @PutMapping("/{leadId}/definir-principal/{enderecoId}")
+    public ResponseEntity<?> definirComoPrincipal(@PathVariable Long leadId, @PathVariable Long enderecoId) {
+        service.definirComoPrincipal(leadId, enderecoId);
+        return ResponseEntity.ok().build();
+    }
 }
