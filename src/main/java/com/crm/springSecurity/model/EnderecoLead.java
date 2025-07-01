@@ -14,6 +14,7 @@ public class EnderecoLead {
     @JoinColumn(name = "lead_id", nullable = false)
     private Lead lead;
 
+
     private String logradouro;
     private String numero;
     private String complemento;

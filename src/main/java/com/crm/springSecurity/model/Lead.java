@@ -19,6 +19,10 @@ public class Lead {
     private String statusLeads; // Campo antigo
     private String observacao;
 
+    @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EnderecoLead> enderecos;
+
+
     @ManyToOne
     @JoinColumn(name = "corretor_id")
     private User corretor;
