@@ -1,6 +1,8 @@
 package com.crm.springSecurity.service;
 
+import com.crm.springSecurity.alth.modelSecurity.Permission;
 import com.crm.springSecurity.alth.modelSecurity.User;
+import com.crm.springSecurity.alth.repository.PermissionRepository;
 import com.crm.springSecurity.alth.repository.UserRepository;
 
 import com.crm.springSecurity.model.dto.UserCadastroDTO;
@@ -12,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +22,9 @@ import java.util.stream.Collectors;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PermissionRepository permissionRepository;
 
     public User getUsuarioByAuthentication(Authentication authentication) {
         String username = authentication.getName();
@@ -43,17 +49,37 @@ public class UserService {
         return userRepository.save(user);
     }
     public User cadastrar(UserCadastroDTO dto) {
-        if (userRepository.existsByUsername(((dto.getUserName())))){
+        if (userRepository.existsByUsername(dto.getUserName())){
             throw new RuntimeException("Usuário já existe");
         }
+
         User user = new User();
         user.setUsername(dto.getUserName());
         user.setNome(dto.getNome());
         user.setEmail(dto.getEmail());
         user.setTelefone(dto.getTelefone());
         user.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
+
+        // Setar todos os campos de conta como true (importante para login funcionar)
         user.setEnabled(true);
-        // Você pode definir permissões padrão aqui, se desejar
+        user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
+
+        // ATENÇÃO: Setando roles/permissões
+        List<Permission> permissoes = dto.getPermissions();
+        if (permissoes == null || permissoes.isEmpty()) {
+            // Busca uma role padrão (ex: ROLE_USER)
+
+            List<Permission> roleUser = new ArrayList<>();
+            for (Permission permission : permissoes) {
+                roleUser.add(permissionRepository.findByDescription(permission.getDescription()));
+            }
+            user.setAuthorities(roleUser);
+        } else {
+            user.setAuthorities(permissoes);
+        }
+
         return userRepository.save(user);
     }
 

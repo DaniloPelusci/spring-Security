@@ -3,6 +3,7 @@ package com.crm.springSecurity.controller;
 import com.crm.springSecurity.model.DocumentosLead;
 import com.crm.springSecurity.model.Lead;
 import com.crm.springSecurity.model.TipoDocumento;
+import com.crm.springSecurity.model.dto.LeadCadastroCompletoDTO;
 import com.crm.springSecurity.model.dto.LeadCadastroDTO;
 import com.crm.springSecurity.model.dto.LeadEdicaoDTO;
 import com.crm.springSecurity.model.dto.LeadFiltroDTO;
@@ -27,7 +28,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
+
 @Tag(name = "Leads", description = "APIs para gerenciamento de leads")
 @RestController
 @RequestMapping("/api/leads")
@@ -161,4 +162,12 @@ public class LeadController {
         String url = "https://seusistema.com/envio-documento/" + codigo;
         return url;
     }
+
+    @PostMapping("/cadastro-completo")
+    @PreAuthorize("hasAnyRole('ADMIN','CORRETOR')")
+    public ResponseEntity<Lead> cadastrarLeadCompleto(@RequestBody LeadCadastroCompletoDTO dto) {
+        Lead leadSalvo = leadService.cadastrarLeadCompleto(dto);
+        return ResponseEntity.ok(leadSalvo);
+    }
+
 }

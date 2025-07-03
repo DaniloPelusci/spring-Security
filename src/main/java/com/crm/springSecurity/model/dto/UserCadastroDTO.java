@@ -1,5 +1,9 @@
 package com.crm.springSecurity.model.dto;
 
+import com.crm.springSecurity.alth.modelSecurity.Permission;
+
+import java.util.List;
+
 public class UserCadastroDTO {
     private String userName;
     private String nome;
@@ -7,7 +11,17 @@ public class UserCadastroDTO {
     private String telefone;
     private String password;
 
+    private List<Permission> permissions ;
     // getters e setters
+
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
 
     public String getUserName() {
         return userName;

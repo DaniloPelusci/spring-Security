@@ -6,8 +6,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.crm.springSecurity.model.EnderecoLead;
+import com.crm.springSecurity.model.dto.LeadCadastroCompletoDTO;
 import com.crm.springSecurity.model.dto.LeadEdicaoDTO;
 import com.crm.springSecurity.repository.DocumentosLeadRepository;
+import com.crm.springSecurity.repository.EnderecoLeadRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -36,6 +39,9 @@ public class LeadService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EnderecoLeadRepository enderecoLeadRepository;
+
     @Autowired
     private DocumentosLeadRepository documentosLeadRepository;
 
@@ -203,5 +209,31 @@ public class LeadService {
 
     public Optional<Lead> findbyId(Long leadId) {
        return leadRepository.findById(leadId);
+    }
+
+    @Transactional
+    public Lead cadastrarLeadCompleto(LeadCadastroCompletoDTO dto) {
+        // Salva o lead
+        Lead leadSalvo = leadRepository.save(dto.getLead());
+        EnderecoLead enderecoLead = new EnderecoLead();
+
+        DocumentosLead documentosLead = new DocumentosLead();
+        // Salva os endereços, vinculando ao lead
+
+        if (dto.getEndereco() != null) {
+            enderecoLead = dto.getEndereco();
+            enderecoLead.setLead(leadSalvo);
+                enderecoLeadRepository.save(enderecoLead);
+        }
+
+        // Salva os documentos, vinculando ao lead
+        if (dto.getDocumentos() != null) {
+            for (DocumentosLead doc : dto.getDocumentos()) {
+                doc.setLead(leadSalvo);
+                documentosLeadRepository.save(doc);
+            }
+        }
+
+        return leadSalvo;
     }
 }
