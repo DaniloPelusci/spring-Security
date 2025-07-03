@@ -99,5 +99,13 @@ public class UserController {
         return ResponseEntity.ok(corretores);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUsuarioID(@PathVariable Long id) {
+        UserDTO user = userService.getById(id);
+
+        return ResponseEntity.ok(user);
+    }
+
     // Demais endpoints...
 }

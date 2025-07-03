@@ -10,6 +10,17 @@ public class UserDTO {
     private String telefone;
 
     // construtores, getters, setters...
+    public UserDTO(Long id, String userName, String nome, String email, String telefone) {
+        this.id = id;
+        this.userName = userName;
+        this.nome = nome;
+        this.email = email;
+        this.telefone = telefone;
+    }
+
+    // Construtor padrão (necessário para alguns frameworks, opcional para JPQL)
+    public UserDTO() {}
+
 
     public Long getId() {
         return id;
