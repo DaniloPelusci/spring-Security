@@ -33,6 +33,8 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class LeadService {
+    @Autowired
+    private AuditoriaService auditoriaService;
 
     @Autowired
     private LeadRepository leadRepository;
@@ -86,7 +88,9 @@ public class LeadService {
             lead.setCorretor(corretor);
         }
 
-        return leadRepository.save(lead);
+        Lead salvo = leadRepository.save(lead);
+        auditoriaService.registrarAcao(usuarioLogado, salvo, "Cadastro de lead");
+        return salvo;
     }
     
     public List<Lead> listarTodos() {
@@ -166,6 +170,9 @@ public class LeadService {
         lead.setCorrespondente(correspondente);
         lead.setStatusLead("ENCAMINHADO_CORRESPONDENTE");
         leadRepository.save(lead);
+        User usuarioLogado = userRepository.findByUsername(getUsuarioLogado())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        auditoriaService.registrarAcao(usuarioLogado, lead, "Lead aceito pelo correspondente");
     }
 
     public LeadService(LeadRepository leadRepository) {
@@ -178,6 +185,9 @@ public class LeadService {
         String codigo = UUID.randomUUID().toString();
         lead.setCodigoUpload(codigo);
         leadRepository.save(lead);
+        User usuarioLogado = userRepository.findByUsername(getUsuarioLogado())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        auditoriaService.registrarAcao(usuarioLogado, lead, "Geração de código de upload");
         return codigo;
     }
 
@@ -204,7 +214,11 @@ public class LeadService {
         if (dto.getNome() != null) lead.setNome(dto.getNome());
         if (dto.getTelefone() != null) lead.setTelefone(dto.getTelefone());
         // ... outros campos conforme necessário
-        return leadRepository.save(lead);
+        Lead salvo = leadRepository.save(lead);
+        User usuarioLogado = userRepository.findByUsername(getUsuarioLogado())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        auditoriaService.registrarAcao(usuarioLogado, salvo, "Atualização do lead");
+        return salvo;
     }
 
     public Optional<Lead> findbyId(Long leadId) {
@@ -233,6 +247,9 @@ public class LeadService {
                 documentosLeadRepository.save(doc);
             }
         }
+        User usuarioLogado = userRepository.findByUsername(getUsuarioLogado())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        auditoriaService.registrarAcao(usuarioLogado, leadSalvo, "Cadastro completo do lead");
 
         return leadSalvo;
     }
