@@ -7,6 +7,9 @@ DROP TABLE IF EXISTS lead_historico CASCADE;
 DROP TABLE IF EXISTS documentos_lead CASCADE;
 DROP TABLE IF EXISTS endereco_lead CASCADE;
 DROP TABLE IF EXISTS leads CASCADE;
+DROP TABLE IF EXISTS pos_venda CASCADE;
+DROP TABLE IF EXISTS contratos CASCADE;
+DROP TABLE IF EXISTS clientes CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
 -- USERS
@@ -125,6 +128,34 @@ CREATE TABLE IF NOT EXISTS lead_historico (
     CONSTRAINT fk_lead_historico_lead FOREIGN KEY (lead_id) REFERENCES leads(id),
     CONSTRAINT fk_lead_historico_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+-- CLIENTES
+CREATE TABLE IF NOT EXISTS clientes (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(150),
+    lead_id INTEGER,
+    data_cadastro DATE,
+    CONSTRAINT fk_cliente_lead FOREIGN KEY (lead_id) REFERENCES leads(id)
+);
+
+-- CONTRATOS
+CREATE TABLE IF NOT EXISTS contratos (
+    id SERIAL PRIMARY KEY,
+    cliente_id INTEGER,
+    descricao VARCHAR(255),
+    data_assinatura DATE,
+    CONSTRAINT fk_contrato_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
+
+-- POS_VENDA
+CREATE TABLE IF NOT EXISTS pos_venda (
+    id SERIAL PRIMARY KEY,
+    cliente_id INTEGER,
+    notas TEXT,
+    data_contato DATE,
+    CONSTRAINT fk_posvenda_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
+
 ----------------------------------------------------------------------------------------------------------xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 -- DROP das tabelas para evitar conflito na criação
 DROP TABLE IF EXISTS lead_historico CASCADE;
@@ -132,6 +163,9 @@ DROP TABLE IF EXISTS documentos_lead CASCADE;
 DROP TABLE IF EXISTS tipo_documento CASCADE;
 DROP TABLE IF EXISTS endereco_lead CASCADE;
 DROP TABLE IF EXISTS leads CASCADE;
+DROP TABLE IF EXISTS pos_venda CASCADE;
+DROP TABLE IF EXISTS contratos CASCADE;
+DROP TABLE IF EXISTS clientes CASCADE;
 DROP TABLE IF EXISTS usuario_ocupacao CASCADE;
 DROP TABLE IF EXISTS ocupacao CASCADE;
 DROP TABLE IF EXISTS user_permission CASCADE;
@@ -246,6 +280,32 @@ CREATE TABLE IF NOT EXISTS lead_historico (
     CONSTRAINT fk_lead_historico_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
 -------------------------------------------------------------------------------------xxxxxxxxxxx
+-- CLIENTES
+CREATE TABLE IF NOT EXISTS clientes (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(150),
+    lead_id INTEGER,
+    data_cadastro DATE,
+    CONSTRAINT fk_cliente_lead FOREIGN KEY (lead_id) REFERENCES leads(id)
+);
+
+-- CONTRATOS
+CREATE TABLE IF NOT EXISTS contratos (
+    id SERIAL PRIMARY KEY,
+    cliente_id INTEGER,
+    descricao VARCHAR(255),
+    data_assinatura DATE,
+    CONSTRAINT fk_contrato_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
+
+-- POS_VENDA
+CREATE TABLE IF NOT EXISTS pos_venda (
+    id SERIAL PRIMARY KEY,
+    cliente_id INTEGER,
+    notas TEXT,
+    data_contato DATE,
+    CONSTRAINT fk_posvenda_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
 População
 
 -- Ative a extensão uuid para geração dos códigos únicos, se ainda não estiver ativa
