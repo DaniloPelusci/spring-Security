@@ -1,7 +1,9 @@
 package com.crm.springSecurity.controller;
 
+import com.crm.springSecurity.model.Inspection;
 import com.crm.springSecurity.model.dto.InspectionImportResponseDTO;
 import com.crm.springSecurity.service.InspectionImportService;
+import com.crm.springSecurity.service.InspectionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Tag(name = "Inspections", description = "APIs para importação de inspeções")
@@ -25,9 +29,23 @@ import java.util.Map;
 public class InspectionController {
 
     private final InspectionImportService inspectionImportService;
+    private final InspectionService inspectionService;
 
-    public InspectionController(InspectionImportService inspectionImportService) {
+    public InspectionController(InspectionImportService inspectionImportService, InspectionService inspectionService) {
         this.inspectionImportService = inspectionImportService;
+        this.inspectionService = inspectionService;
+    }
+
+    @Operation(
+            summary = "Listar inspeções",
+            description = "Retorna inspeções cadastradas. Se informado inspetorId, aplica filtro pelo inspetor.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Lista de inspeções retornada com sucesso")
+            }
+    )
+    @GetMapping
+    public List<Inspection> listarInspections(@RequestParam(value = "inspetorId", required = false) Long inspetorId) {
+        return inspectionService.listar(inspetorId);
     }
 
     @Operation(
