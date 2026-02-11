@@ -1,0 +1,57 @@
+package com.crm.springSecurity.controller;
+
+import com.crm.springSecurity.model.dto.InspectionImportResponseDTO;
+import com.crm.springSecurity.service.InspectionImportService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Map;
+
+@Tag(name = "Inspections", description = "APIs para importação de inspeções")
+@RestController
+@RequestMapping("/api/inspections")
+public class InspectionController {
+
+    private final InspectionImportService inspectionImportService;
+
+    public InspectionController(InspectionImportService inspectionImportService) {
+        this.inspectionImportService = inspectionImportService;
+    }
+
+    @Operation(
+            summary = "Importar planilha de inspeções",
+            description = "Recebe um arquivo .xlsx e grava os registros na tabela inspections.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Planilha importada com sucesso",
+                            content = @Content(schema = @Schema(implementation = InspectionImportResponseDTO.class))),
+                    @ApiResponse(responseCode = "400", description = "Arquivo inválido")
+            }
+    )
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> importarInspections(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "inspetorId", required = false) Long inspetorId
+    ) {
+        try {
+            InspectionImportResponseDTO response = inspectionImportService.importar(file, inspetorId);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("erro", e.getMessage()));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("erro", "Não foi possível ler o arquivo Excel enviado."));
+        }
+    }
+}
