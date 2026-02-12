@@ -2,6 +2,7 @@ package com.crm.springSecurity.service;
 
 import com.crm.springSecurity.model.Inspection;
 import com.crm.springSecurity.repository.InspectionRepository;
+import com.crm.springSecurity.repository.InspectorRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,7 +17,8 @@ class InspectionServiceTest {
     @Test
     void deveListarTodasQuandoInspetorIdNaoForInformado() {
         InspectionRepository repository = mock(InspectionRepository.class);
-        InspectionService service = new InspectionService(repository);
+        InspectorRepository inspectorRepository = mock(InspectorRepository.class);
+        InspectionService service = new InspectionService(repository, inspectorRepository);
 
         when(repository.findAll()).thenReturn(List.of(new Inspection(), new Inspection()));
 
@@ -30,7 +32,8 @@ class InspectionServiceTest {
     @Test
     void deveFiltrarPorInspetorQuandoInspetorIdForInformado() {
         InspectionRepository repository = mock(InspectionRepository.class);
-        InspectionService service = new InspectionService(repository);
+        InspectorRepository inspectorRepository = mock(InspectorRepository.class);
+        InspectionService service = new InspectionService(repository, inspectorRepository);
 
         when(repository.findByInspetorId(42L)).thenReturn(List.of(new Inspection()));
 
@@ -44,7 +47,8 @@ class InspectionServiceTest {
     @Test
     void deveCriarInspecaoComIdNulo() {
         InspectionRepository repository = mock(InspectionRepository.class);
-        InspectionService service = new InspectionService(repository);
+        InspectorRepository inspectorRepository = mock(InspectorRepository.class);
+        InspectionService service = new InspectionService(repository, inspectorRepository);
 
         Inspection inspection = new Inspection();
         inspection.setId(12L);
@@ -58,9 +62,25 @@ class InspectionServiceTest {
     }
 
     @Test
+    void deveFalharAoCriarQuandoInspetorIdForInvalido() {
+        InspectionRepository repository = mock(InspectionRepository.class);
+        InspectorRepository inspectorRepository = mock(InspectorRepository.class);
+        InspectionService service = new InspectionService(repository, inspectorRepository);
+
+        Inspection inspection = new Inspection();
+        inspection.setInspetorId(999L);
+
+        when(inspectorRepository.existsById(999L)).thenReturn(false);
+
+        assertThrows(ResponseStatusException.class, () -> service.criar(inspection));
+        verify(repository, never()).save(any());
+    }
+
+    @Test
     void deveAtualizarInspecaoExistente() {
         InspectionRepository repository = mock(InspectionRepository.class);
-        InspectionService service = new InspectionService(repository);
+        InspectorRepository inspectorRepository = mock(InspectorRepository.class);
+        InspectionService service = new InspectionService(repository, inspectorRepository);
 
         Inspection existente = new Inspection();
         existente.setId(5L);
@@ -69,6 +89,7 @@ class InspectionServiceTest {
         payload.setStatus("DONE");
 
         when(repository.findById(5L)).thenReturn(Optional.of(existente));
+        when(inspectorRepository.existsById(anyLong())).thenReturn(true);
         when(repository.save(any(Inspection.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Inspection atualizada = service.atualizar(5L, payload);
@@ -80,7 +101,8 @@ class InspectionServiceTest {
     @Test
     void deveLancarNotFoundAoBuscarInspecaoInexistente() {
         InspectionRepository repository = mock(InspectionRepository.class);
-        InspectionService service = new InspectionService(repository);
+        InspectorRepository inspectorRepository = mock(InspectorRepository.class);
+        InspectionService service = new InspectionService(repository, inspectorRepository);
 
         when(repository.findById(999L)).thenReturn(Optional.empty());
 
