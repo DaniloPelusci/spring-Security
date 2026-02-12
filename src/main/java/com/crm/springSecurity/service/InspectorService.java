@@ -34,9 +34,6 @@ public class InspectorService {
     public Inspector atualizar(Long id, Inspector inspector) {
         Inspector existente = buscarPorId(id);
         existente.setNome(inspector.getNome());
-        existente.setEmail(inspector.getEmail());
-        existente.setTelefone(inspector.getTelefone());
-        existente.setAtivo(inspector.getAtivo());
         return inspectorRepository.save(existente);
     }
 
