@@ -12,8 +12,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +50,32 @@ public class InspectionController {
     @GetMapping
     public List<Inspection> listarInspections(@RequestParam(value = "inspetorId", required = false) Long inspetorId) {
         return inspectionService.listar(inspetorId);
+    }
+
+
+    @Operation(summary = "Buscar inspeção por ID")
+    @GetMapping("/{id}")
+    public Inspection buscarPorId(@PathVariable Long id) {
+        return inspectionService.buscarPorId(id);
+    }
+
+    @Operation(summary = "Criar inspeção")
+    @PostMapping
+    public ResponseEntity<Inspection> criar(@RequestBody Inspection inspection) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(inspectionService.criar(inspection));
+    }
+
+    @Operation(summary = "Atualizar inspeção")
+    @PutMapping("/{id}")
+    public Inspection atualizar(@PathVariable Long id, @RequestBody Inspection inspection) {
+        return inspectionService.atualizar(id, inspection);
+    }
+
+    @Operation(summary = "Excluir inspeção")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        inspectionService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(
