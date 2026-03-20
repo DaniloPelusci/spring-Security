@@ -1,4 +1,4 @@
-package com.crm.springsecurity;
+package com.crm.zipupload;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

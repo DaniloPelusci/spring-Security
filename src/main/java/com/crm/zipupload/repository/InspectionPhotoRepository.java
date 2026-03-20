@@ -1,8 +1,8 @@
-package com.crm.springsecurity.repository;
+package com.crm.zipupload.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.crm.springsecurity.entity.InspectionPhoto;
+import com.crm.zipupload.entity.InspectionPhoto;
 
 public interface InspectionPhotoRepository extends JpaRepository<InspectionPhoto, Long> {
 }
