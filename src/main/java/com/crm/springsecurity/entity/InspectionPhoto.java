@@ -1,4 +1,4 @@
-package com.crm.springsecurity.entity;
+package com.crm.zipupload.entity;
 
 import java.time.OffsetDateTime;
 

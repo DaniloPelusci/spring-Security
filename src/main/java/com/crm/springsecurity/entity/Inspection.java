@@ -1,4 +1,4 @@
-package com.crm.springsecurity.entity;
+package com.crm.zipupload.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

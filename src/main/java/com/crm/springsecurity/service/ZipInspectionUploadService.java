@@ -1,4 +1,4 @@
-package com.crm.springsecurity.service;
+package com.crm.zipupload.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -16,13 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.crm.springsecurity.dto.ZipUploadResultDto;
-import com.crm.springsecurity.entity.Inspection;
-import com.crm.springsecurity.entity.InspectionPhoto;
-import com.crm.springsecurity.entity.Inspector;
-import com.crm.springsecurity.repository.InspectionPhotoRepository;
-import com.crm.springsecurity.repository.InspectionRepository;
-import com.crm.springsecurity.repository.InspectorRepository;
+import com.crm.zipupload.dto.ZipUploadResultDto;
+import com.crm.zipupload.entity.Inspection;
+import com.crm.zipupload.entity.InspectionPhoto;
+import com.crm.zipupload.entity.Inspector;
+import com.crm.zipupload.repository.InspectionPhotoRepository;
+import com.crm.zipupload.repository.InspectionRepository;
+import com.crm.zipupload.repository.InspectorRepository;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;

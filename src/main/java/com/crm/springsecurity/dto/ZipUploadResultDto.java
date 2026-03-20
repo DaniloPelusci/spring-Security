@@ -1,4 +1,4 @@
-package com.crm.springsecurity.dto;
+package com.crm.zipupload.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
