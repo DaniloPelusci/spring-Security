@@ -22,7 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 
-@Configuration("jwtSecurityConfig")
+@Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
 
