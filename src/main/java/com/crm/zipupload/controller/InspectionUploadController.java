@@ -1,4 +1,4 @@
-package com.crm.springsecurity.controller;
+package com.crm.zipupload.controller;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.crm.springsecurity.dto.ZipUploadResultDto;
-import com.crm.springsecurity.service.ZipInspectionUploadService;
+import com.crm.zipupload.dto.ZipUploadResultDto;
+import com.crm.zipupload.service.ZipInspectionUploadService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

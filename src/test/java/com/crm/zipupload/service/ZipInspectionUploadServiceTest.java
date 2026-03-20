@@ -1,4 +1,4 @@
-package com.crm.springsecurity.service;
+package com.crm.zipupload.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -19,13 +19,13 @@ import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.crm.springsecurity.dto.ZipUploadResultDto;
-import com.crm.springsecurity.entity.Inspection;
-import com.crm.springsecurity.entity.InspectionPhoto;
-import com.crm.springsecurity.entity.Inspector;
-import com.crm.springsecurity.repository.InspectionPhotoRepository;
-import com.crm.springsecurity.repository.InspectionRepository;
-import com.crm.springsecurity.repository.InspectorRepository;
+import com.crm.zipupload.dto.ZipUploadResultDto;
+import com.crm.zipupload.entity.Inspection;
+import com.crm.zipupload.entity.InspectionPhoto;
+import com.crm.zipupload.entity.Inspector;
+import com.crm.zipupload.repository.InspectionPhotoRepository;
+import com.crm.zipupload.repository.InspectionRepository;
+import com.crm.zipupload.repository.InspectorRepository;
 
 class ZipInspectionUploadServiceTest {
 
