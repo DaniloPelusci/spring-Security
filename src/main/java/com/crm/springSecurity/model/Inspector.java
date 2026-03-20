@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "inspectors")
+@Table(name = "inspetor")
 public class Inspector {
 
     @Id
@@ -17,10 +17,6 @@ public class Inspector {
 
     @Column(nullable = false)
     private String nome;
-
-    private String email;
-    private String telefone;
-    private Boolean ativo = true;
 
     public Long getId() {
         return id;
@@ -36,29 +32,5 @@ public class Inspector {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public Boolean getAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
     }
 }
