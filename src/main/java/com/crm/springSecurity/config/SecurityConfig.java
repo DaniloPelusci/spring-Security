@@ -1,4 +1,4 @@
-package com.crm.springsecurity.config;
+package com.crm.springSecurity.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
